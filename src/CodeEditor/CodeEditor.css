@@ -1,0 +1,44 @@
+   .code-editor {
+    display: flex;
+    height: 700px;
+  }
+  
+  .code-editor__textarea,
+  .code-editor__output {
+    flex: 1;
+    border: 1px solid #ccc;
+  }
+  
+  .code-editor__textarea {
+    padding: 10px; 
+  }
+  
+  .textarea {
+    width: 100%;
+    height: 93%;
+    resize: none;
+    outline: none;
+    outline-color: none;
+    border: none;
+    /* padding: 10px; */
+    font-family: monospace;
+  }
+  
+  .input-container {
+    display: flex;
+  }
+  
+  .input-container input {
+    flex: 1;
+     height: 35px;
+     padding-left: 10px;
+  }
+
+  .code-editor__output{
+    padding: 10px;
+  }
+  
+  .code-editor__output pre {
+    white-space: pre-wrap;
+  }
+  
