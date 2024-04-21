@@ -1,6 +1,7 @@
-import React, { useState} from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./CodeEditor.css"; 
+import "./CodeEditor.css";
+import MultiFileUploader from "../FileUploader/MultiFileUploader";
 
 const CodeEditor = () => {
   const [code, setCode] = useState("");
@@ -25,7 +26,7 @@ const CodeEditor = () => {
   const recieveCodeFromServer = async () => {
     try {
       const response = await axios.get("http://localhost:5000/send-code");
-      setCode(response.data.convertedCode);
+      setCode(code + response.data.convertedCode);
     } catch (error) {
       console.error("Error fetching analysis:", error);
     }
@@ -87,7 +88,27 @@ const CodeEditor = () => {
     setInstruction(e.target.value);
   };
 
+  const handleFilePaths = (filePaths) => {
+    let rawCode = "import pandas as pd\n\n";
+    filePaths.forEach((file, index) => {
+      rawCode += `df${index} = pd.read_excel(r'${file.path}')\n`;
+    });
+    setCode(code + rawCode);
+  };
 
+  useEffect(() => {
+    const fetchFolderPath = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/folderPath");
+        const folderPath = response.data.folderPath;
+        const rawCode = `#df.to_csv(r'${folderPath}\\output.csv', index=False)\n#df.to_excel(r'${folderPath}\\output.xlsx', index=False)\n#df.to_json(r'${folderPath}\\output.json', orient='records')\n\n`;
+        setCode(rawCode);
+      } catch (error) {
+        console.error("Error fetching analysis:", error);
+      }
+    };
+    fetchFolderPath();
+  },[]);
   return (
     <>
       <button onClick={OpenNotebook}>Open Notebook</button>
@@ -96,6 +117,7 @@ const CodeEditor = () => {
       <button onClick={recieveCodeFromServer}>Reload</button>
       <div className="code-editor">
         <div className="code-editor__textarea">
+          <MultiFileUploader handleFilePaths={handleFilePaths} />
           <textarea className="textarea" value={code} onChange={handleChange} />
           <div className="input-container">
             <input

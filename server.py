@@ -8,6 +8,8 @@ import nbconvert
 from nbconvert.preprocessors import ExecutePreprocessor
 import base64
 import os
+import json
+
 
 
 app = Flask(__name__)
@@ -72,13 +74,17 @@ def analyze_data():
 def process_python_code():
     data = request.get_json()
     code = data['code']
-    
+    file_path = os.path.join(BASE_DIR,'analysis_result.csv' )
     try:
         result = subprocess.run(['python','-c',code], capture_output=True, text=True)
         print(result)
         if result.returncode == 0:
             # Read the analysis result from subprocess output
             analysis_result = result.stdout
+
+            # with open(file_path, 'w') as f:
+            #    f.write(analysis_result)
+            # analysis_result.to_csv(file_path, index=False)
             # Return the analysis result in the response
             return jsonify({'output': analysis_result})
         else:
@@ -148,6 +154,29 @@ def openNotebook():
             return jsonify({'result':'The file is present and opened'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500   
+    
+@app.route('/upload', methods=['POST'])
+def upload():
+    # Check if the POST request contains files
+    if 'files' not in request.files:
+        return jsonify({'error': 'No files found in the request'}), 400
+
+    files = request.files.getlist('files')
+    file_paths = []
+
+    for file in files:
+        if file.filename == '':
+            return jsonify({'error': 'No selected file'}), 400
+        if file:
+            file_path = os.path.join(BASE_DIR, file.filename)
+            file.save(file_path)
+            file_paths.append({"path":file_path,"fileName":file.filename})
+
+    return jsonify({'filePaths': file_paths})
+
+@app.route('/folderPath',methods=['GET'])
+def folderPath():
+    return jsonify({'folderPath':BASE_DIR})
 
 if __name__ == '__main__':
     app.run(debug=True)

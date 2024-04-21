@@ -14,12 +14,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start-jupyter": "jupyter notebook",
-    "start-react": "react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "start": "concurrently \"npm run start-jupyter\" \"npm run start-react\""
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
