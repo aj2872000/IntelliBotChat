@@ -3,12 +3,14 @@ import axios from "axios";
 import "./CodeEditor.css";
 import MultiFileUploader from "../FileUploader/MultiFileUploader";
 import SpreadSheet from "../SpreadSheet/SpreadSheet";
+import { IoCloseCircle } from "react-icons/io5";
 
 const CodeEditor = () => {
   const [code, setCode] = useState("");
   const [analysisResult, setAnalysisResult] = useState("");
   const [instruction, setInstruction] = useState("");
-  const [spreadSheetData,setSpreadSheetData]=useState([])
+  const [spreadSheetData, setSpreadSheetData] = useState([]);
+  const [show, setShow] = useState(true);
 
   const handleChange = (e) => {
     setCode(e.target.value);
@@ -39,7 +41,7 @@ const CodeEditor = () => {
       .post("http://localhost:5000/process-python-code", { code })
       .then((response) => {
         console.log(response.data);
-        setSpreadSheetData(response.data.data)
+        setSpreadSheetData(response.data.data);
         setAnalysisResult(response.data.output);
       })
       .catch((error) => {
@@ -99,6 +101,10 @@ const CodeEditor = () => {
     setCode(code + rawCode);
   };
 
+  const closeHandler = () => {
+    setShow(false);
+  };
+
   useEffect(() => {
     const fetchFolderPath = async () => {
       try {
@@ -113,31 +119,41 @@ const CodeEditor = () => {
     fetchFolderPath();
   }, []);
   return (
-    <>
-      <SpreadSheet data={spreadSheetData}/>
-      <button onClick={OpenNotebook}>Open Notebook</button>
-      <button onClick={fetchDataAnalysis}>Perform Data Analysis</button>
-      <button onClick={sendCodeToServer}>Save</button>
-      <button onClick={recieveCodeFromServer}>Reload</button>
-      <div className="code-editor">
-        <div className="code-editor__textarea">
-          <MultiFileUploader handleFilePaths={handleFilePaths} />
-          <textarea className="textarea" value={code} onChange={handleChange} />
-          <div className="input-container">
-            <input
-              placeholder="Type your instruction here"
-              value={instruction}
-              onChange={handleInstruction}
+    <div className="container">
+      <div className="spreadsheet">
+        <SpreadSheet data={spreadSheetData} />
+      </div>
+      <div
+        className="codebox"
+        style={show ? { display: "block" } : { display: "none" }}
+      >
+        <button onClick={OpenNotebook}>Open Notebook</button>
+        <button onClick={fetchDataAnalysis}>Perform Data Analysis</button>
+        <button onClick={sendCodeToServer}>Save</button>
+        <button onClick={recieveCodeFromServer}>Reload</button>
+        <button className="close-icon" onClick={closeHandler}>
+          <IoCloseCircle size={30} />
+        </button>
+        <div className="code-editor">
+          <div className="code-editor__textarea">
+            <MultiFileUploader handleFilePaths={handleFilePaths} />
+            <textarea
+              className="textarea"
+              value={code}
+              onChange={handleChange}
             />
-            <button onClick={genAi}>GenAi</button>
+            <div className="input-container">
+              <input
+                placeholder="Type your instruction here"
+                value={instruction}
+                onChange={handleInstruction}
+              />
+              <button onClick={genAi}>GenAi</button>
+            </div>
           </div>
         </div>
-        <div className="code-editor__output">
-          <h2>Output:</h2>
-          <pre>{analysisResult}</pre>
-        </div>
       </div>
-    </>
+    </div>
   );
 };
 

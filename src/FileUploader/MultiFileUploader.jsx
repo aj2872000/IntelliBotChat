@@ -40,12 +40,6 @@ const MultiFileUploader = ({handleFilePaths}) => {
         multiple
         className="file-input"
       />
-      {/* <h3 className="selected-files-header">Selected Files:</h3>
-      <ul className="file-list">
-        {selectedFiles.map((file, index) => (
-          <li key={index} className="file-item">{file.name}</li>
-        ))}
-      </ul> */}
     </div>
   );
 };
