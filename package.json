@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@datalayer/jupyter-react": "^0.9.5",
+    "@syncfusion/ej2-react-spreadsheet": "^25.1.40",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",

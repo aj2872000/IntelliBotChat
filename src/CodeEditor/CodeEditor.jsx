@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./CodeEditor.css";
 import MultiFileUploader from "../FileUploader/MultiFileUploader";
+import SpreadSheet from "../SpreadSheet/SpreadSheet";
 
 const CodeEditor = () => {
   const [code, setCode] = useState("");
   const [analysisResult, setAnalysisResult] = useState("");
   const [instruction, setInstruction] = useState("");
+  const [spreadSheetData,setSpreadSheetData]=useState([])
 
   const handleChange = (e) => {
     setCode(e.target.value);
@@ -37,6 +39,7 @@ const CodeEditor = () => {
       .post("http://localhost:5000/process-python-code", { code })
       .then((response) => {
         console.log(response.data);
+        setSpreadSheetData(response.data.data)
         setAnalysisResult(response.data.output);
       })
       .catch((error) => {
@@ -108,9 +111,10 @@ const CodeEditor = () => {
       }
     };
     fetchFolderPath();
-  },[]);
+  }, []);
   return (
     <>
+      <SpreadSheet data={spreadSheetData}/>
       <button onClick={OpenNotebook}>Open Notebook</button>
       <button onClick={fetchDataAnalysis}>Perform Data Analysis</button>
       <button onClick={sendCodeToServer}>Save</button>

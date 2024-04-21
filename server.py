@@ -74,7 +74,7 @@ def analyze_data():
 def process_python_code():
     data = request.get_json()
     code = data['code']
-    file_path = os.path.join(BASE_DIR,'analysis_result.csv' )
+    file_path = os.path.join(BASE_DIR,'output.json' )
     try:
         result = subprocess.run(['python','-c',code], capture_output=True, text=True)
         print(result)
@@ -82,11 +82,11 @@ def process_python_code():
             # Read the analysis result from subprocess output
             analysis_result = result.stdout
 
-            # with open(file_path, 'w') as f:
-            #    f.write(analysis_result)
-            # analysis_result.to_csv(file_path, index=False)
+            with open(file_path, 'r') as f:
+               json_data = json.load(f)
+
             # Return the analysis result in the response
-            return jsonify({'output': analysis_result})
+            return jsonify({'output': analysis_result,'data':json_data})
         else:
             # Handle error condition
             error=result.stderr

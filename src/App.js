@@ -18,20 +18,35 @@
 // // }
 
 // App.js
-import React from "react";
-import CodeEditor from "./CodeEditor/CodeEditor";
+// import React from "react";
+// import CodeEditor from "./CodeEditor/CodeEditor";
+// import "./App.css";
+// import ErrorComponent from "./ErrorComponent/ErrorComponent";
+
+// function App() {
+//   return (
+// <>
+//   <div className="main">
+//     <CodeEditor />
+//     {/* <ErrorComponent message="ajay"/> */}
+//   </div>
+// </>
+//   );
+// }
+
+// export default App;
+
+import * as React from "react";
 import "./App.css";
-import ErrorComponent from "./ErrorComponent/ErrorComponent";
+import CodeEditor from "./CodeEditor/CodeEditor";
 
 function App() {
   return (
     <>
       <div className="main">
         <CodeEditor />
-        {/* <ErrorComponent message="ajay"/> */}
       </div>
     </>
   );
 }
-
 export default App;
